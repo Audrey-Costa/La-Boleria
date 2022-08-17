@@ -18,7 +18,7 @@ export async function registerOrder(req, res){
 
     } catch (error) {
         console.log(error);
-        res.sendStatus(500);         
+        res.sendStatus(500);
     }
 }
 
@@ -57,6 +57,25 @@ export async function getOrder(req, res){
 
     } catch (error) {
         console.log(error);
-        res.sendStatus(500);          
+        res.sendStatus(500);
+    }
+}
+
+export async function getOrderById(req, res){
+    const id = req.params.id;
+    try {
+        const { rows: order } = await ordersRepository.getOrdersByid(id);
+        if (order.length === 0){
+            return res.sendStatus(404);
+        }
+        const { rows: client } = await ordersRepository.searchClient(order[0].client);
+        const { rows: cake } = await ordersRepository.searchCake(order[0].cake);
+        order[0].client = client[0];
+        order[0].cake = cake[0];
+        res.status(200).send(order[0]);
+
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);        
     }
 }

@@ -20,10 +20,15 @@ async function getOrdersByDate(date){
     return connection.query(`SELECT id AS "orderId", "clientId" as client, "cakeId" as cake,"createdAt", quantity, "totalPrice", "isDelivered" FROM orders WHERE "createdAt" between $1 and $1`, [date + '%'])
 }
 
+async function getOrdersByid(id){
+    return connection.query(`SELECT id AS "orderId", "clientId" as client, "cakeId" as cake,"createdAt", quantity, "totalPrice", "isDelivered" FROM orders WHERE id = $1`, [id]);
+}
+
 export const ordersRepository = {
     searchClient,
     searchCake,
     registerOrder,
     getOrders,
-    getOrdersByDate
+    getOrdersByDate,
+    getOrdersByid
 };
