@@ -21,3 +21,42 @@ export async function registerOrder(req, res){
         res.sendStatus(500);         
     }
 }
+
+export async function getOrder(req, res){
+    const date = req.query.date;
+    try {
+        if (date) {
+            const { rows: orders } = await ordersRepository.getOrdersByDate(date);
+            if (orders.length === 0){
+                return res.status(404).send([]);
+            }
+    
+            for (let order of orders){
+                const { rows: client } = await ordersRepository.searchClient(order.client);
+                const { rows: cake } = await ordersRepository.searchCake(order.cake);
+                order.client = client[0];
+                order.cake = cake[0];
+            }
+    
+            res.status(200).send(orders);
+        } else {
+            const { rows: orders } = await ordersRepository.getOrders();
+            if (orders.length === 0){
+                return res.status(404).send([]);
+            }
+    
+            for (let order of orders){
+                const { rows: client } = await ordersRepository.searchClient(order.client);
+                const { rows: cake } = await ordersRepository.searchCake(order.cake);
+                order.client = client[0];
+                order.cake = cake[0];
+            }
+    
+            res.status(200).send(orders);
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);          
+    }
+}

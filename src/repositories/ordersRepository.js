@@ -1,19 +1,29 @@
 import connection from "../database.js";
 
 async function searchClient(id){
-    return connection.query(`SELECT id FROM clients WHERE id = $1`, [id]);
+    return connection.query(`SELECT * FROM clients WHERE id = $1`, [id]);
 }
 
 async function searchCake(id){
-    return connection.query(`SELECT id, price FROM cakes WHERE id = $1`, [id]);
+    return connection.query(`SELECT * FROM cakes WHERE id = $1`, [id]);
 }
 
 async function registerOrder(clientId, cakeId, quantity, totalPrice, createdAt){
     return connection.query(`INSERT INTO orders ("clientId", "cakeId", quantity, "totalPrice", "createdAt") VALUES ($1, $2, $3, $4, $5)`, [clientId, cakeId, quantity, totalPrice, createdAt]);
 }
 
+async function getOrders(){
+    return connection.query(`SELECT id AS "orderId", "clientId" as client, "cakeId" as cake,"createdAt", quantity, "totalPrice", "isDelivered" FROM orders`)
+}
+
+async function getOrdersByDate(date){
+    return connection.query(`SELECT id AS "orderId", "clientId" as client, "cakeId" as cake,"createdAt", quantity, "totalPrice", "isDelivered" FROM orders WHERE "createdAt" between $1 and $1`, [date + '%'])
+}
+
 export const ordersRepository = {
     searchClient,
     searchCake,
-    registerOrder
+    registerOrder,
+    getOrders,
+    getOrdersByDate
 };
