@@ -9,7 +9,7 @@ async function searchClient(id){
 }
 
 async function getClientOrders(id){
-    return connection.query(`SELECT orders.id AS "orderId", quantity, "createdAt", "totalPrice", cakes.name AS "cakeName", "isDelivered" FROM orders JOIN cakes ON "cakeId" = cakes.id WHERE "clientId" = $1 order by "createdAt" DESC`, [id])
+    return connection.query(`SELECT orders.id AS "orderId", quantity, "createdAt", "totalPrice", cakes.name AS "cakeName", "isDelivered" FROM orders JOIN cakes ON "cakeId" = cakes.id WHERE "clientId" = $1 order by "createdAt" DESC`, [id]);
 }
 export const clientsRepository = {
     registerClient,

@@ -24,11 +24,16 @@ async function getOrdersByid(id){
     return connection.query(`SELECT id AS "orderId", "clientId" as client, "cakeId" as cake,"createdAt", quantity, "totalPrice", "isDelivered" FROM orders WHERE id = $1`, [id]);
 }
 
+async function confirmOrderDelivery(id){
+    return connection.query(`UPDATE orders SET "isDelivered" = true WHERE id = $1`, [id]);
+}
+
 export const ordersRepository = {
     searchClient,
     searchCake,
     registerOrder,
     getOrders,
     getOrdersByDate,
-    getOrdersByid
+    getOrdersByid,
+    confirmOrderDelivery
 };

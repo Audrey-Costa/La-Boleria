@@ -79,3 +79,25 @@ export async function getOrderById(req, res){
         res.sendStatus(500);        
     }
 }
+
+export async function confirmOrderDelivery(req, res){
+    const id = req.params.id;
+    try {
+        const { rows: order } = await ordersRepository.getOrdersByid(id);
+        if (order.length === 0){
+            return res.sendStatus(404);
+        }
+
+        if (order[0].isDelivered){
+            return res.sendStatus(400);
+        }
+
+        await ordersRepository.confirmOrderDelivery(id);
+        res.sendStatus(204);
+
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);        
+    }
+    
+}
