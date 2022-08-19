@@ -8,6 +8,22 @@ export async function registerClient(req, res){
         
     } catch (error) {
         console.log(error);
-        res.sendStatus(500);        
+        res.sendStatus(500);
+    }
+}
+
+export async function getClientOrders(req, res){
+    const id = req.params.id;
+    try {
+        const { rows: client } = await clientsRepository.searchClient(id);
+        if (client.length === 0){
+            return res.sendStatus(404);
+        }
+        const { rows: orders } = await clientsRepository.getClientOrders(id);
+        res.status(200).send(orders);
+
+    } catch (error) {
+        console.log(error);
+        res.sendStatus(500);
     }
 }
